@@ -91,7 +91,7 @@ async function getAIResponse(prompt) {
   }
   console.log(completion);
 
-  const response = (completion?.data?.choices?.[0].text || 'AI 挂了').trim();
+  const response = (completion?.data?.choices?.[0].message?.content || 'AI 挂了').trim();
 
   return strip(response, ['\n', 'A: ']);
 }
