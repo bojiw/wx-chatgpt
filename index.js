@@ -38,7 +38,7 @@ const LIMIT_COUNT_RESPONSE = '对不起，因为ChatGPT调用收费，您的免�
 
 const configuration = new Configuration({
   apiKey: 'sk-jE9uK0XfKn0NDHr8JNdVlJ2p2tE2QVlIro1h1WmvuEjWWpGN',
-  basePath: 'https://api.aiproxy.io/v1',
+  basePath: 'https://api.aiproxy.io/v1/chat',
 });
 
 const openai = new OpenAIApi(configuration);
