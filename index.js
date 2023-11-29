@@ -68,6 +68,7 @@ async function getAIResponse(prompt) {
     max_tokens: 1024,
     temperature: 0.1,
   });
+  console.log(completion);
 
   const response = (completion?.data?.choices?.[0].text || 'AI 挂了').trim();
 
