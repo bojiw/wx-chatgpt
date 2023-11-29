@@ -59,11 +59,17 @@ async function buildCtxPrompt({ FromUserName }) {
     return [{ content: messages[0].request, role: 'user' }];
   }
 
-  // 将消息转换为 ChatGPT-3.5 上下文结构
-  return messages.map(({ response, request }) => [
-    { content: request, role: 'user' },
-    { content: response, role: 'assistant' }
-  ]).flat();
+  // 构建上下文数组
+  let contextArray = [];
+  messages.forEach(({ response, request }, index) => {
+    contextArray.push({ content: request, role: 'user' });
+    // 如果不是最后一条消息或者有响应，则添加助手的响应
+    if (index < messages.length - 1 || response) {
+      contextArray.push({ content: response, role: 'assistant' });
+    }
+  });
+
+  return contextArray;
 }
 
 async function getAIResponse(prompt) {
