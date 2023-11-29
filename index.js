@@ -53,22 +53,28 @@ async function buildCtxPrompt({ FromUserName }) {
     limit: LIMIT_AI_TEXT_COUNT,
     order: [['updatedAt', 'ASC']],
   });
-  // 只有一条的时候，就不用封装上下文了
-  return messages.length === 1
-    ? messages[0].request
-    : messages
-        .map(({ response, request }) => `Q: ${request}\n A: ${response}`)
-        .join('\n');
+
+  // 如果只有一条消息，就直接返回该消息作为请求
+  if (messages.length === 1) {
+    return [{ content: messages[0].request, role: 'user' }];
+  }
+
+  // 将消息转换为 ChatGPT-3.5 上下文结构
+  return messages.map(({ response, request }) => [
+    { content: request, role: 'user' },
+    { content: response, role: 'assistant' }
+  ]).flat();
 }
 
 async function getAIResponse(prompt) {
-  console.log("开始对话");
+  console.log(prompt);
   try {
     completion = await openai.createCompletion({
-      model: 'text-davinci-003',
-      prompt,
+      model: 'gpt-3.5-turbo-16k',
+      messages: prompt,
       max_tokens: 1024,
-      temperature: 0.1,
+      temperature: 0.9,
+      stream: false,
     });
   } catch (error) {
     // 打印错误日志
