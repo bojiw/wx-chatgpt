@@ -58,7 +58,7 @@ async function buildCtxPrompt({ FromUserName }) {
   if (messages.length === 1) {
     return [{ content: messages[0].request, role: 'user' }];
   }
-
+ messages[0].request =  "/b " + messages[0].request
   // 构建上下文数组
   let contextArray = [];
   messages.forEach(({ response, request }, index) => {
