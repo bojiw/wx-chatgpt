@@ -63,12 +63,20 @@ async function buildCtxPrompt({ FromUserName }) {
 
 async function getAIResponse(prompt) {
   console.log("开始对话");
-  const completion = await openai.createCompletion({
-    model: 'text-davinci-003',
-    prompt,
-    max_tokens: 1024,
-    temperature: 0.1,
-  });
+  try {
+    completion = await openai.createCompletion({
+      model: 'text-davinci-003',
+      prompt,
+      max_tokens: 1024,
+      temperature: 0.1,
+    });
+  } catch (error) {
+    // 打印错误日志
+    console.error('OpenAI API 调用异常:', error);
+
+    // 可以选择返回默认回复或错误信息
+    return '出现了一些问题，请稍后重试。';
+  }
   console.log(completion);
 
   const response = (completion?.data?.choices?.[0].text || 'AI 挂了').trim();
@@ -224,7 +232,7 @@ router.post('/message/post', async ctx => {
 
   const message = await Promise.race([
     // 3秒微信服务器就会超时，超过2.8秒要提示用户重试
-    sleep(2800).then(() => AI_THINKING_MESSAGE),
+    sleep(8800).then(() => AI_THINKING_MESSAGE),
     getAIMessage({ Content, FromUserName }),
   ]);
 
