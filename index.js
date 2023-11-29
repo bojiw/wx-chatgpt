@@ -38,7 +38,7 @@ const LIMIT_COUNT_RESPONSE = '对不起，因为ChatGPT调用收费，您的免�
 
 const configuration = new Configuration({
   apiKey: 'sk-jE9uK0XfKn0NDHr8JNdVlJ2p2tE2QVlIro1h1WmvuEjWWpGN',
-  apiEndpoint: 'https://api.aiproxy.io/',
+  basePath: 'https://api.aiproxy.io',
 });
 
 const openai = new OpenAIApi(configuration);
@@ -232,7 +232,7 @@ router.post('/message/post', async ctx => {
 
   const message = await Promise.race([
     // 3秒微信服务器就会超时，超过2.8秒要提示用户重试
-    sleep(8800).then(() => AI_THINKING_MESSAGE),
+    sleep(2800).then(() => AI_THINKING_MESSAGE),
     getAIMessage({ Content, FromUserName }),
   ]);
 
